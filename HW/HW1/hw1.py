@@ -6,9 +6,7 @@ class Portfolio(object):
         self.cash = 0.00
         self.stock = {}
         self.mutual_funds = {}
-        self.history = 'Your portfolio is initialized successfully! \n'
-
-    # Cash related functions:
+        self.history = 'Your portfolio is initialized successfully. \n'
 
     def addCash(self, cash):
         self.cash += cash
@@ -28,7 +26,7 @@ class Portfolio(object):
                 total_amount = share_price + self.stock[stock.symbol]
                 self.stock[stock.symbol] = total_amount
 
-            self.history += '\n' + str(int(share_price)) + ' shares of ' + str(stock.symbol) \
+            self.history += str(int(share_price)) + ' shares of ' + str(stock.symbol) \
                             + ' has been successfully purchased for $' + str(share_price)
 
         else:
@@ -136,3 +134,4 @@ class MutualFund(object):
 
     def __init__(self, s):
         self.symbol = s
+

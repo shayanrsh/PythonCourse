@@ -1,22 +1,20 @@
-from hw1 import Portfolio, Stock, MutualFund
+from hw1 import *
 
 portfolio = Portfolio()
-portfolio.addCash(300)
-s = Stock(20, "SXP")
+portfolio.addCash(300.50)
+s = Stock(20, "HFH")
 portfolio.buyStock(5, s)
-mf1 = MutualFund("DOGE")
-mf2 = MutualFund("XRP")
+mf1 = MutualFund("BRT")
+mf2 = MutualFund("GHT")
 
-portfolio.buyMutualFund(4.4, mf1)
-portfolio.buyMutualFund(7, mf2)
+portfolio.buyMutualFund(10.3, mf1)
+portfolio.buyMutualFund(2, mf2)
 portfolio.print()
 
-portfolio.sellMutualFund("DOGE", 1)
-portfolio.sellStock("SXP", 4)
+portfolio.sellMutualFund("BRT", 3)
+portfolio.sellStock("HFH", 1)
 portfolio.print()
 
-portfolio.withdrawCash(31)
+portfolio.withdrawCash(50)
 portfolio.print()
 
-portfolio.History()
-portfolio.withdrawCash(200)
