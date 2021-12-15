@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import math
 import scipy.stats as st
 
@@ -10,67 +9,64 @@ def linear_regression(x=None, y=None, data_set=None):
         df = pd.read_csv(data_set, nrows=1000)
         df = df.dropna()
         print(df.head())
-        if data_set == 'bottle.csv':
-            X = df['T_degC']
+        if data_set == 'modified_bottle.csv':
+            X = df[['T_degC', 'Depthm']]
             X = X.to_numpy()
             Y = df['Salnty']
             Y = Y.to_numpy()
         else:
-            X = df.iloc[:, 0]
+            X = df.iloc[:, 0:1]
             X = X.to_numpy()
-            Y = df.iloc[:, 1]
+            Y = df.iloc[:, 2]
             Y = Y.to_numpy()
     else:
         X = x
         Y = y
 
-    # Visualizing the data
-    x_label, y_label = df.columns
-    plt.scatter(X, Y)
-    plt.xlabel(str(x_label))
-    plt.ylabel(str(y_label))
-    plt.show()
+    # one is added to X for further calculations
+    modified_X = np.concatenate((np.ones((len(X), 1), dtype=int), X), axis=1)
 
-    # Adding 1 to the X matrix for the intercept
-    one_column = np.ones((X.shape[0], 1))
-    X = np.concatenate((one_column, X), axis=1)
+    beta_hat = np.linalg.solve(np.dot(modified_X.T, modified_X), np.dot(modified_X.T, Y))
+    print("Coefficients: ", beta_hat.reshape(beta_hat.shape[0], ).tolist())
 
-    # Beta
-    Beta = np.linalg.solve(np.dot(X.T, X), np.dot(X.T, y))
+    regression_estimates = np.dot(modified_X, beta_hat)
 
-    # Y_hat
-    n = X.shape[1]  #number of obs.
-    h = np.ones((X.shape[0], 1))
-    theta = Beta.reshape(1, n)
-    for i in range(0, X.shape[0]):
-        h[i] = float(np.matmul(theta, X[i]))
-    regression_estimates = h.reshape(X.shape[0])
+    error = Y - regression_estimates
+    standard_errors = math.sqrt(np.dot(error.T, error) / (len(Y) - X.shape[1]))
 
-    """# number of observations/points
-    n = np.size(X)
+    standard_errors_var = np.sqrt(np.diag(np.dot(error.T, error) / (len(Y) - X.shape[1]) *
+                                          np.linalg.inv(np.dot(modified_X.T, modified_X)))).tolist()
 
-    # mean of x and y vector
-    m_x = np.mean(X)
-    m_y = np.mean(Y)
+    beta_list = beta_hat.reshape(beta_hat.shape[0], ).tolist()
 
-    # calculating cross-deviation and deviation about x
-    SS_xy = np.sum(np.dot(Y, X)) - n * m_y * m_x
-    SS_xx = np.sum(np.dot(X, X)) - n * m_x * m_x
+    # Dictionary of beta - standard_errors tuples to be used in the CI formula
+    beta_without_se_dict = dict(zip(beta_list, standard_errors_var))
 
-    # calculating regression coefficients
-    b_1 = SS_xy / SS_xx
-    b_0 = m_y - b_1 * m_x
-    regression_estimates = b_0 + b_1 * X"""
+    # %95 Confidence Intervals
+    t_statistic = st.t.ppf(1 - 0.025, len(Y) - X.shape[1])
 
-    # Visualizing the data
-    x_label, y_label = df.columns
-    plt.scatter(X, Y)
-    plt.plot(X, regression_estimates, color='red', linewidth='2')
-    plt.xlabel(str(x_label))
-    plt.ylabel(str(y_label))
-    plt.show()
+    # Lower CI's
+    lower_CI = []
+    for beta in beta_without_se_dict:
+        lower_CI.append(beta - (t_statistic * beta_without_se_dict[beta]))
 
-    standard_errors = []
-    credible_intervals = []
+    # Upper CI's
+    upper_CI = []
+    for beta in beta_without_se_dict:
+        upper_CI.append(beta + (t_statistic * beta_without_se_dict[beta]))
 
-    return regression_estimates, standard_errors, credible_intervals
+    credible_intervals = [lower_CI, upper_CI]
+
+    t_statistic_list = []
+    # intercept t_statistic-value
+    for beta in beta_without_se_dict:
+        t_statistic_list.append(beta / beta_without_se_dict[beta])
+    print("t_statistic-values: ", t_statistic_list)
+
+    for t_statistic_value in t_statistic_list:
+        if t_statistic_value < t_statistic:
+            print("Failed to reject the null hypothesis.")
+        else:
+            print('Null hypothesis rejected.')
+
+    return regression_estimates, standard_errors, credible_intervals, X, Y
