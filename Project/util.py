@@ -4,7 +4,6 @@ import imageio
 import keras
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 from IPython.display import Image
 from keras import backend as K
 from keras.engine import Input, Model
