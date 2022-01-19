@@ -85,21 +85,11 @@ def visualize_data_gif(data_):
 # Some code was borrowed from:
 # https://github.com/ellisdg/3DUnetCNN/blob/master/unet3d/
 
-
 def create_convolution_block(input_layer, n_filters, batch_normalization=False,
                              kernel=(3, 3, 3), activation=None,
                              padding='same', strides=(1, 1, 1),
                              instance_normalization=False):
-    """
-    :param strides:
-    :param input_layer:
-    :param n_filters:
-    :param batch_normalization:
-    :param kernel:
-    :param activation: Keras activation layer to use. (default is 'relu')
-    :param padding:
-    :return:
-    """
+
     layer = Conv3D(n_filters, kernel, padding=padding, strides=strides)(
         input_layer)
     if activation is None:
@@ -124,25 +114,7 @@ def unet_model_3d(loss_function, input_shape=(4, 160, 160, 16),
                   deconvolution=False, depth=4, n_base_filters=32,
                   include_label_wise_dice_coefficients=False, metrics=[],
                   batch_normalization=False, activation_name="sigmoid"):
-    """
-    Builds the 3D UNet Keras model.f
-    :param metrics: List metrics to be calculated during model training (default is dice coefficient).
-    :param include_label_wise_dice_coefficients: If True and n_labels is greater than 1, model will report the dice
-    coefficient for each label as metric.
-    :param n_base_filters: The number of filters that the first layer in the convolution network will have. Following
-    layers will contain a multiple of this number. Lowering this number will likely reduce the amount of memory required
-    to train the model.
-    :param depth: indicates the depth of the U-shape for the model. The greater the depth, the more max pooling
-    layers will be added to the model. Lowering the depth may reduce the amount of memory required for training.
-    :param input_shape: Shape of the input data (n_chanels, x_size, y_size, z_size). The x, y, and z sizes must be
-    divisible by the pool size to the power of the depth of the UNet, that is pool_size^depth.
-    :param pool_size: Pool size for the max pooling operations.
-    :param n_labels: Number of binary labels that the model is learning.
-    :param initial_learning_rate: Initial learning rate for the model. This will be decayed during training.
-    :param deconvolution: If set to True, will use transpose convolution(deconvolution) instead of up-sampling. This
-    increases the amount memory required during training.
-    :return: Untrained 3D UNet Model
-    """
+
     inputs = Input(input_shape)
     current_layer = inputs
     levels = list()
@@ -323,7 +295,7 @@ def predict_and_viz(image, label, model, threshold, loc=(100, 100, 50)):
 
     ax[0][0].imshow(np.rot90(image_labeled[x, :, :, :]))
     ax[0][0].set_ylabel('Ground Truth', fontsize=15)
-    ax[0][0].set_xlabel('Sagital', fontsize=15)
+    ax[0][0].set_xlabel('Sagittal', fontsize=15)
 
     ax[0][1].imshow(np.rot90(image_labeled[:, y, :, :]))
     ax[0][1].set_xlabel('Coronal', fontsize=15)
