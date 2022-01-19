@@ -4,7 +4,6 @@
     <list default="true" id="bff92064-7019-40de-9237-374a3af787ec" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/C1M3_A1_Brain Tumor Auto-Segmentation for Magnetic Resonance Imaging.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/C1M3_A1_Brain Tumor Auto-Segmentation for Magnetic Resonance Imaging.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Report.docx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +61,7 @@
       <option name="presentableId" value="Default" />
       <updated>1642606394563</updated>
       <workItem from="1642606395693" duration="3222000" />
-      <workItem from="1642617354202" duration="3690000" />
+      <workItem from="1642617354202" duration="4913000" />
     </task>
     <servers />
   </component>
